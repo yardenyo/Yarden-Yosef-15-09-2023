@@ -1,15 +1,28 @@
 <template>
-	<div class="weather-page">
+	<div class="weather-page view">
 		<h1>Weather Page</h1>
+		<p>Current theme: {{ theme }}</p>
+		<button @click="toggleTheme">Toggle Theme</button>
 	</div>
 </template>
 <script>
-import { ref, reactive, computed, defineComponent } from "vue";
+import { useThemeStore } from "@/stores/theme.store";
+import { storeToRefs } from "pinia";
+import { defineComponent } from "vue";
 
 export default defineComponent({
 	name: "WeatherPage",
 	setup() {
-		return {};
+		const themeStore = useThemeStore();
+		const { theme } = storeToRefs(themeStore);
+
+		function toggleTheme() {
+			themeStore.toggleTheme();
+		}
+		return {
+			theme,
+			toggleTheme,
+		};
 	},
 });
 </script>
