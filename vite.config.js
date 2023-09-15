@@ -27,7 +27,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "sass:math";@import "@/assets/scss/main.scss"; @import "@/assets/scss/abstracts/colors.scss"; @import "@/assets/scss/variables.scss";`,
+        additionalData: `@use "sass:math"; @import "@/assets/scss/abstracts/colors.scss"; @import "@/assets/scss/abstracts/typography.scss"; @import "@/assets/scss/variables.scss";`,
       },
     },
   },
