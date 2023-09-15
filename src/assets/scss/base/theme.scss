@@ -1,11 +1,35 @@
 .light {
 	.view {
-		background-color: red;
+		background-color: $background;
+	}
+
+	.text {
+		color: $dark-900;
+	}
+
+	.navbar {
+		background: $dark-900;
+
+		.nav-link {
+			color: $white;
+		}
 	}
 }
 
 .dark {
 	.view {
-		background-color: blue;
+		background-color: $background-dark;
+	}
+
+	.text {
+		color: $white;
+	}
+
+	.navbar {
+		background: $primary;
+
+		.nav-link {
+			color: $dark-900;
+		}
 	}
 }

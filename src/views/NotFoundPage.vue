@@ -1,3 +1,3 @@
-<template>1234</template>
+<template></template>
 <script></script>
 <style lang="scss" scoped></style>
