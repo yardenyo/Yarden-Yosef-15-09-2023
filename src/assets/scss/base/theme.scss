@@ -10,8 +10,46 @@
 	.navbar {
 		background: $dark-900;
 
+		.logo {
+			color: $white;
+		}
+
 		.nav-link {
 			color: $white;
+
+			&:hover {
+				background: $primary;
+			}
+		}
+	}
+
+	.theme-switcher {
+		background: $dark-900;
+
+		&:hover {
+			background: $primary;
+		}
+
+		.pi {
+			color: $white;
+		}
+	}
+
+	.temperature-switcher {
+		background: $dark-900;
+		color: $white;
+
+		&:hover {
+			background: $primary;
+		}
+	}
+
+	.hamburger-menu {
+		background: $dark-900;
+		color: $white;
+
+		.bar {
+			background: $white;
 		}
 	}
 }
@@ -28,8 +66,46 @@
 	.navbar {
 		background: $primary;
 
+		.logo {
+			color: $dark-900;
+		}
+
 		.nav-link {
 			color: $dark-900;
+
+			&:hover {
+				background: $green-700;
+			}
+		}
+	}
+
+	.theme-switcher {
+		background: $primary;
+
+		&:hover {
+			background: $green-700;
+		}
+
+		.pi {
+			color: $dark-900;
+		}
+	}
+
+	.temperature-switcher {
+		background: $primary;
+		color: $dark-900;
+
+		&:hover {
+			background: $green-700;
+		}
+	}
+
+	.hamburger-menu {
+		background: $primary;
+		color: $dark-900;
+
+		.bar {
+			background: $dark-900;
 		}
 	}
 }

@@ -28,7 +28,3 @@ $letter-spacing: 0px;
 @mixin text-decoration($decoration) {
 	text-decoration: $decoration;
 }
-
-@mixin text-color($color) {
-	color: $color;
-}
