@@ -12,7 +12,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 	});
 
 	const showWelcomeMessage = computed(() => {
-		return !locationIsSet.value && permissionStatus.value === "prompt";
+		return !locationIsSet.value && promptAccess.value;
 	});
 
 	const showWeather = computed(() => {
@@ -20,11 +20,19 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 	});
 
 	const showDefaultWeather = computed(() => {
-		return !locationIsSet.value || !grantedAccess.value;
+		return !locationIsSet.value || deniedAccess.value;
 	});
 
 	const grantedAccess = computed(() => {
 		return permissionStatus.value === "granted";
+	});
+
+	const deniedAccess = computed(() => {
+		return permissionStatus.value === "denied";
+	});
+
+	const promptAccess = computed(() => {
+		return permissionStatus.value === "prompt";
 	});
 
 	async function getUserLocation() {
@@ -42,9 +50,11 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 					longitude: position.coords.longitude,
 				};
 				localStorage.setItem("location", JSON.stringify(location.value));
+				getPermissionStatus();
 			},
 			(err) => {
 				error.value = true;
+				getPermissionStatus();
 				helpers.sendErrorMessage(err.message);
 			},
 		);
@@ -75,5 +85,6 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 		showWeather,
 		showDefaultWeather,
 		getUserLocation,
+		getPermissionStatus,
 	};
 });
