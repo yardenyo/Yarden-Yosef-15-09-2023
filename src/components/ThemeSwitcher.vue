@@ -8,6 +8,7 @@
 import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
 import { computed, defineComponent } from "vue";
+import helpers from "@/helpers/app.helpers";
 
 export default defineComponent({
 	name: "ThemeSwitcher",
@@ -19,8 +20,9 @@ export default defineComponent({
 			return theme.value === "light" ? "pi pi-moon" : "pi pi-sun";
 		});
 
-		function toggleTheme() {
-			themeStore.toggleTheme();
+		async function toggleTheme() {
+			await themeStore.toggleTheme();
+			helpers.sendInfoMessage(`Theme changed to ${theme.value}`);
 		}
 
 		return {
