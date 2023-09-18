@@ -13,9 +13,13 @@ import PrimeVue from "primevue/config";
 import Vue3Toasity from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+import Tooltip from "primevue/tooltip";
+
 const app = createApp(App);
 
 app.use(PrimeVue);
+
+app.directive("tooltip", Tooltip);
 
 app.use(Vue3Toasity);
 

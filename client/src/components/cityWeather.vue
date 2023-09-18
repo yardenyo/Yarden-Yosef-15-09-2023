@@ -2,15 +2,18 @@
 	<div class="city-weather">
 		<div class="container">
 			<div class="header">
-				<div class="weather-icon">
-					<img src="https://developer.accuweather.com/sites/default/files/02-s.png" alt="weather-icon" />
-				</div>
-				<div class="city-name">
-					<h2>{{ cityInfo.LocalizedName }}</h2>
-					<h3>{{ cityInfo.Country.LocalizedName }}</h3>
+				<div class="city-wrapper">
+					<div class="weather-icon">
+						<img src="https://developer.accuweather.com/sites/default/files/02-s.png" alt="weather-icon" />
+					</div>
+					<div class="city-name">
+						<h2>{{ cityInfo.LocalizedName }}</h2>
+						<h3>{{ cityInfo.Country.LocalizedName }}</h3>
+					</div>
 				</div>
 				<div class="add-to-favorites">
-					<i class="pi pi-heart-fill"></i>
+					<i v-if="true" v-tooltip.top="'Add To Favorites'" class="pi pi-heart"></i>
+					<i v-else v-tooltip.top="'Remove From Favorites'" class="pi pi-heart-fill"></i>
 				</div>
 			</div>
 			<div class="five-day-forecast">
@@ -102,6 +105,29 @@ $spacing-unit: 1rem;
 			gap: $spacing-unit;
 			padding: $spacing-unit;
 			border-radius: 0.25rem;
+
+			.city-wrapper {
+				display: flex;
+				align-items: center;
+				gap: $spacing-unit;
+			}
+
+			.add-to-favorites {
+				.pi-heart {
+					cursor: pointer;
+					font-size: 1.5rem;
+
+					&:hover {
+						color: $danger-primary;
+					}
+				}
+
+				.pi-heart-fill {
+					cursor: pointer;
+					font-size: 1.5rem;
+					color: $danger-primary;
+				}
+			}
 		}
 
 		.five-day-forecast {
@@ -121,7 +147,7 @@ $spacing-unit: 1rem;
 		}
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: $tablet) {
 		.container {
 			.header,
 			.five-day-forecast .forecast-day {
