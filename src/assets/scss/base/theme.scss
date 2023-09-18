@@ -3,6 +3,14 @@
 		background-color: $background;
 	}
 
+	.footer {
+		background: $dark-900;
+	}
+
+	.footer-text {
+		color: $white;
+	}
+
 	.text {
 		color: $dark-900;
 	}
@@ -65,6 +73,14 @@
 .dark {
 	.view {
 		background-color: $background-dark;
+	}
+
+	.footer {
+		background: $primary;
+	}
+
+	.footer-text {
+		color: $dark-900;
 	}
 
 	.text {
