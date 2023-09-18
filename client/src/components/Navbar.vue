@@ -62,9 +62,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .navbar {
 	width: 100%;
-	position: fixed;
-	top: 0;
-	left: 0;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
