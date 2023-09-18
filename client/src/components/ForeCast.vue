@@ -95,7 +95,7 @@ $glass-backdrop: blur(10px);
 	}
 }
 
-@media (max-width: $tablet) {
+@media (max-width: $large-desktop) {
 	.five-day-forecast {
 		.forecast-day {
 			min-width: 100%;

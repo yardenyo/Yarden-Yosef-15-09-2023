@@ -3,10 +3,12 @@
 		<Welcome @start="start" />
 	</div>
 	<div v-else class="weather-page view">
-		<span class="p-float-label">
-			<AutoComplete v-model="value" inputId="ac" :suggestions="items" @complete="search" />
-			<label for="ac">Search For A City</label>
-		</span>
+		<div class="search-component">
+			<span class="p-float-label">
+				<AutoComplete class="auto-complete" v-model="value" inputId="ac" :suggestions="items" @complete="search" />
+				<label for="ac">Search For A City</label>
+			</span>
+		</div>
 		<cityWeather :location="location" />
 	</div>
 </template>
@@ -70,5 +72,22 @@ export default defineComponent({
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
+
+	.search-component {
+		width: 25%;
+		display: flex;
+		justify-content: center;
+
+		.p-float-label {
+			width: 100%;
+
+			:deep(.p-autocomplete) {
+				width: 100% !important;
+				.p-autocomplete-input {
+					width: 100% !important;
+				}
+			}
+		}
+	}
 }
 </style>
