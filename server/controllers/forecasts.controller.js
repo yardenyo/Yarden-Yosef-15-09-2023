@@ -13,8 +13,8 @@ const foreCastsController = {
   getFiveDayForecast: async (req, res) => {
     try {
       const locationId = req.query.locationId;
-      const displayMetric = req.query.displayMetric;
-      const link = `${api_host}/${resource}/${api_version}/daily/5day/${locationId}?apikey=${api_key}&metric=${displayMetric}`;
+      const metric = req.query.metric;
+      const link = `${api_host}/${resource}/${api_version}/daily/5day/${locationId}?apikey=${api_key}&metric=${metric}`;
       const response = await axios.get(link);
       res.json(response.data);
     } catch (error) {

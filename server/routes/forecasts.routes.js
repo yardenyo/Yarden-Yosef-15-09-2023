@@ -3,6 +3,6 @@ const forecastsController = require("../controllers/forecasts.controller");
 
 const router = express.Router();
 
-router.get("/getFiveDayForecast", forecastsController.getFiveDayForecast);
+router.get("/getCityForecast", forecastsController.getFiveDayForecast);
 
 module.exports = router;

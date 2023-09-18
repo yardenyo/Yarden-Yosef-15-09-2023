@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import helpers from "@/helpers/app.helpers";
 import locationsApi from "@/api/locations.api";
 import currentConditionsApi from "@/api/currentConditions.api";
+import forecastsApi from "@/api/forecasts.api";
 import { getLocationByQuery, getLocationById, getLocationByGeoPosition, getLocationForecastById } from "@/helpers/localWeather.js";
 
 export const useWeatherStore = defineStore("useWeatherStore", () => {
@@ -190,23 +191,31 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 	});
 
 	async function getCityByQuery(city) {
-		const response = await locationsApi.getCitySearch(city);
-		defaultCityInfo.value = response.data[0];
+		// const response = await locationsApi.getCitySearch(city);
+		// defaultCityInfo.value = response.data[0];
+		const response = await getLocationByQuery(city);
+		defaultCityInfo.value = response[0];
 	}
 
 	async function getCurrentConditions(locationId) {
-		const response = await currentConditionsApi.getCurrentConditions(locationId);
-		cityCurrentConditions.value = response.data[0];
+		// const response = await currentConditionsApi.getCurrentConditions(locationId);
+		// cityCurrentConditions.value = response.data[0];
+		const response = await getLocationById(locationId);
+		cityCurrentConditions.value = response[0];
 	}
 
 	async function getWeatherConditionsByGeoPosition({ latitude, longitude }) {
-		const response = await locationsApi.getWeatherConditionsByGeoPosition(latitude, longitude);
-		locationCityInfo.value = response.data;
+		// const response = await locationsApi.getWeatherConditionsByGeoPosition(latitude, longitude);
+		// locationCityInfo.value = response.data;
+		const response = await getLocationByGeoPosition({ latitude, longitude });
+		locationCityInfo.value = response;
 	}
 
 	async function getCityForecast(locationId, isMetric) {
-		const response = await locationsApi.getCityForecast(locationId, isMetric);
-		cityForecast.value = response.data;
+		// const response = await forecastsApi.getCityForecast(locationId, isMetric);
+		// cityForecast.value = response.data;
+		const response = await getLocationForecastById(locationId, isMetric);
+		cityForecast.value = response;
 	}
 
 	return {

@@ -30,17 +30,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="five-day-forecast">
-				<div v-for="day in cityForecast.DailyForecasts" :key="day.EpochDate" class="forecast-day">
-					<div class="day-icon">
-						<img v-if="day.Day.Icon <= 9" :src="`https://developer.accuweather.com/sites/default/files/0${day.Day.Icon}-s.png`" alt="weather-icon" />
-						<img v-else :src="`https://developer.accuweather.com/sites/default/files/${day.Day.Icon}-s.png`" alt="weather-icon" />
-					</div>
-					<div class="day-info">
-						<span>{{ day.Day.IconPhrase }}</span>
-						<span>{{ day.Temperature.Maximum.Value }}°{{ day.Temperature.Maximum.Unit }}</span>
-					</div>
-				</div>
+			<div class="forecast-section">
+				<ForeCast :cityForecast="cityForecast" />
 			</div>
 		</div>
 	</div>
@@ -52,9 +43,13 @@ import { useWeatherStore } from "@/stores/weather.store";
 import { useTemperatureStore } from "@/stores/temperature.store";
 import { storeToRefs } from "pinia";
 import helpers from "@/helpers/app.helpers";
+import ForeCast from "@/components/ForeCast.vue";
 
 export default defineComponent({
 	name: "cityWeather",
+	components: {
+		ForeCast,
+	},
 	props: {
 		location: {
 			type: Object,
@@ -115,11 +110,11 @@ $spacing-unit: 1rem;
 	flex-direction: column;
 	gap: $spacing-unit;
 	font-family: $font-family;
-	padding: $spacing-unit * 2;
+	padding: $spacing-unit;
 	border-radius: 0.5rem;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 	width: 100%;
-	max-width: 1200px;
+	max-width: 1600px;
 	margin: 0 auto;
 
 	.container {
@@ -188,31 +183,6 @@ $spacing-unit: 1rem;
 						font-weight: 500;
 					}
 				}
-			}
-		}
-
-		.five-day-forecast {
-			display: flex;
-			flex-wrap: wrap;
-			gap: $spacing-unit;
-
-			.forecast-day {
-				flex: 1;
-				border-radius: 0.25rem;
-				padding: $spacing-unit;
-				min-width: calc(20% - $spacing-unit);
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-			}
-		}
-	}
-
-	@media (max-width: $tablet) {
-		.container {
-			.header,
-			.five-day-forecast .forecast-day {
-				min-width: 100%;
 			}
 		}
 	}
