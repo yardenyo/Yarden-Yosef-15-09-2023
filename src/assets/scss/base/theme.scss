@@ -14,6 +14,14 @@
 			color: $white;
 		}
 
+		.navbar-link {
+			color: $white;
+
+			&:hover {
+				background: $primary;
+			}
+		}
+
 		.nav-link {
 			color: $white;
 
@@ -75,6 +83,14 @@
 
 			&:hover {
 				background: $green-700;
+			}
+		}
+
+		.navbar-link {
+			color: $green-700;
+
+			&:hover {
+				background: $white;
 			}
 		}
 	}

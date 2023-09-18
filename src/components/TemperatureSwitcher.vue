@@ -1,6 +1,7 @@
 <template>
-	<div class="temperature-switcher" @click="toggleTemperature">
-		{{ temperatureIcon }}
+	<div :class="isMobile ? 'temperature-switcher-mobile' : 'temperature-switcher'" @click="toggleTemperature">
+		<span v-if="!isMobile">{{ temperatureIcon }}</span>
+		<span v-else>Change Temperature</span>
 	</div>
 </template>
 
@@ -12,6 +13,12 @@ import helpers from "@/helpers/app.helpers";
 
 export default defineComponent({
 	name: "TemperatureSwitcher",
+	props: {
+		isMobile: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	setup() {
 		const temperatureStore = useTemperatureStore();
 		const { temperature } = storeToRefs(temperatureStore);
@@ -42,5 +49,13 @@ export default defineComponent({
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
+}
+
+.temperature-switcher-mobile {
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	text-decoration: none;
 }
 </style>

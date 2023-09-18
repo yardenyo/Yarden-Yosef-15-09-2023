@@ -1,6 +1,7 @@
 <template>
-	<div class="theme-switcher" @click="toggleTheme">
-		<i :class="themeIcon"></i>
+	<div :class="isMobile ? 'theme-switcher-mobile' : 'theme-switcher'" @click="toggleTheme">
+		<i v-if="!isMobile" :class="themeIcon"></i>
+		<span v-else>Change Theme</span>
 	</div>
 </template>
 
@@ -12,6 +13,12 @@ import helpers from "@/helpers/app.helpers";
 
 export default defineComponent({
 	name: "ThemeSwitcher",
+	props: {
+		isMobile: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	setup() {
 		const themeStore = useThemeStore();
 		const { theme } = storeToRefs(themeStore);
@@ -43,5 +50,13 @@ export default defineComponent({
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
+}
+
+.theme-switcher-mobile {
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	text-decoration: none;
 }
 </style>

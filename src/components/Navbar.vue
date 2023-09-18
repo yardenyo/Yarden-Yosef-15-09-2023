@@ -14,12 +14,8 @@
 			<span class="bar"></span>
 		</div>
 		<div class="toggles-section">
-			<div class="navbar-theme-switcher">
-				<ThemeSwitcher />
-			</div>
-			<div class="navbar-measurement-switcher">
-				<TemperatureSwitcher />
-			</div>
+			<ThemeSwitcher />
+			<TemperatureSwitcher />
 		</div>
 		<div class="navbar-links">
 			<router-link class="nav-link" to="/">Home</router-link>
@@ -30,6 +26,8 @@
 			<div class="mobile-menu-links">
 				<router-link class="navbar-link" to="/">Home</router-link>
 				<router-link class="navbar-link" to="/favorites">Favorites</router-link>
+				<ThemeSwitcher class="navbar-link" :isMobile="true" />
+				<TemperatureSwitcher class="navbar-link" :isMobile="true" />
 			</div>
 		</div>
 	</div>
@@ -135,15 +133,11 @@ export default defineComponent({
 			gap: 1rem;
 
 			.navbar-link {
-				color: $white;
-				opacity: 0.7;
-				font-size: 1.2rem;
-				font-weight: 500;
+				padding: 0.5rem;
+				border-radius: 0.5rem;
 				cursor: pointer;
-
-				&:hover {
-					color: $primary;
-				}
+				transition: all 0.2s ease-in-out;
+				text-decoration: none;
 			}
 		}
 	}
