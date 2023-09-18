@@ -66,7 +66,6 @@ export default defineComponent({
 	align-items: center;
 	justify-content: space-between;
 	padding: 0.5rem 1rem;
-
 	.logo {
 		display: flex;
 		align-items: center;
@@ -121,6 +120,7 @@ export default defineComponent({
 		align-items: center;
 		padding: 1rem 0;
 		transform-origin: top;
+		z-index: 1000;
 
 		.mobile-menu-links {
 			padding-top: 2rem;

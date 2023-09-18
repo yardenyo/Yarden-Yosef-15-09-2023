@@ -4,7 +4,11 @@
 			<div class="header">
 				<div class="city-wrapper">
 					<div class="weather-icon">
-						<img src="https://developer.accuweather.com/sites/default/files/02-s.png" alt="weather-icon" />
+						<img
+							v-if="cityCurrentConditions.WeatherIcon <= 9"
+							:src="`https://developer.accuweather.com/sites/default/files/0${cityCurrentConditions.WeatherIcon}-s.png`"
+							alt="weather-icon" />
+						<img v-else :src="`https://developer.accuweather.com/sites/default/files/${cityCurrentConditions.WeatherIcon}-s.png`" alt="weather-icon" />
 					</div>
 					<div class="city-name">
 						<h2>{{ cityInfo.LocalizedName }}</h2>
@@ -16,14 +20,25 @@
 					<i v-else v-tooltip.top="'Remove From Favorites'" class="pi pi-heart-fill"></i>
 				</div>
 			</div>
+			<div class="details-section">
+				<div class="current-weather">
+					<div class="current-weather-info">
+						<div class="current-weather-temp">
+							{{ todayForecastTemprature }}
+						</div>
+						<div class="current-weather-text">{{ cityCurrentConditions.WeatherText }}</div>
+					</div>
+				</div>
+			</div>
 			<div class="five-day-forecast">
-				<div v-for="day in 5" :key="day" class="forecast-day">
+				<div v-for="day in cityForecast.DailyForecasts" :key="day.EpochDate" class="forecast-day">
 					<div class="day-icon">
-						<img :src="`https://developer.accuweather.com/sites/default/files/0${day}-s.png`" alt="weather-icon" />
+						<img v-if="day.Day.Icon <= 9" :src="`https://developer.accuweather.com/sites/default/files/0${day.Day.Icon}-s.png`" alt="weather-icon" />
+						<img v-else :src="`https://developer.accuweather.com/sites/default/files/${day.Day.Icon}-s.png`" alt="weather-icon" />
 					</div>
 					<div class="day-info">
-						<span>Day {{ day }}</span>
-						<span>25°C</span>
+						<span>{{ day.Day.IconPhrase }}</span>
+						<span>{{ day.Temperature.Maximum.Value }}°{{ day.Temperature.Maximum.Unit }}</span>
 					</div>
 				</div>
 			</div>
@@ -34,6 +49,7 @@
 <script>
 import { defineComponent, computed, onMounted } from "vue";
 import { useWeatherStore } from "@/stores/weather.store";
+import { useTemperatureStore } from "@/stores/temperature.store";
 import { storeToRefs } from "pinia";
 import helpers from "@/helpers/app.helpers";
 
@@ -47,7 +63,9 @@ export default defineComponent({
 	},
 	setup(props) {
 		const weatherStore = useWeatherStore();
-		const { defaultCityInfo, locationCityInfo } = storeToRefs(weatherStore);
+		const temperatureStore = useTemperatureStore();
+		const { defaultCityInfo, locationCityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
+		const { temperature } = storeToRefs(temperatureStore);
 
 		const isLocationSet = computed(() => {
 			return !helpers.isNumpty(props.location);
@@ -57,12 +75,21 @@ export default defineComponent({
 			return isLocationSet.value ? locationCityInfo.value : defaultCityInfo.value;
 		});
 
+		const todayForecastTemprature = computed(() => {
+			return temperature.value === "celsius"
+				? `${cityCurrentConditions.value.Temperature.Metric.Value}°${cityCurrentConditions.value.Temperature.Metric.Unit}`
+				: `${cityCurrentConditions.value.Temperature.Imperial.Value}°${cityCurrentConditions.value.Temperature.Imperial.Unit}`;
+		});
+
 		onMounted(async () => {
 			if (!isLocationSet.value) {
 				await weatherStore.getCityByQuery("telaviv");
 				await weatherStore.getCurrentConditions(defaultCityInfo.value.Key);
+				await weatherStore.getCityForecast(defaultCityInfo.value.Key);
 			} else {
-				await weatherStore.getCityByGeoPosition(props.location);
+				await weatherStore.getWeatherConditionsByGeoPosition(props.location);
+				await weatherStore.getCurrentConditions(locationCityInfo.value.Key);
+				await weatherStore.getCityForecast(locationCityInfo.value.Key);
 			}
 		});
 
@@ -71,6 +98,9 @@ export default defineComponent({
 			defaultCityInfo,
 			locationCityInfo,
 			cityInfo,
+			cityForecast,
+			cityCurrentConditions,
+			todayForecastTemprature,
 		};
 	},
 });
@@ -99,7 +129,6 @@ $spacing-unit: 1rem;
 
 		.header {
 			display: flex;
-			flex-direction: row;
 			align-items: center;
 			justify-content: space-between;
 			gap: $spacing-unit;
@@ -126,6 +155,38 @@ $spacing-unit: 1rem;
 					cursor: pointer;
 					font-size: 1.5rem;
 					color: $danger-primary;
+				}
+			}
+		}
+
+		.details-section {
+			display: flex;
+			flex-direction: column;
+			gap: $spacing-unit;
+			padding: $spacing-unit;
+			border-radius: 0.25rem;
+
+			.current-weather {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: $spacing-unit;
+
+				.current-weather-info {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: $spacing-unit;
+
+					.current-weather-temp {
+						font-size: 2rem;
+						font-weight: 700;
+					}
+
+					.current-weather-text {
+						font-size: 1.5rem;
+						font-weight: 500;
+					}
 				}
 			}
 		}
