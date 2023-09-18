@@ -30,11 +30,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, onMounted } from "vue";
-import { useWeatherStore } from "@/stores/weather.store";
-import { useTemperatureStore } from "@/stores/temperature.store";
-import { storeToRefs } from "pinia";
-import helpers from "@/helpers/app.helpers";
+import { defineComponent } from "vue";
 
 export default defineComponent({
 	name: "ForeCast",
@@ -44,7 +40,7 @@ export default defineComponent({
 			required: true,
 		},
 	},
-	setup(props) {
+	setup() {
 		return {};
 	},
 });
@@ -52,6 +48,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 $spacing-unit: 1rem;
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-backdrop: blur(10px);
 
 .five-day-forecast {
 	display: flex;
@@ -66,12 +64,15 @@ $spacing-unit: 1rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		background: $glass-bg;
+		backdrop-filter: $glass-backdrop;
+		border-radius: 0.5rem;
+		border: 1px solid rgba(255, 255, 255, 0.2);
 	}
 
 	.day-info-wrapper {
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
+		flex-direction: column;
 		align-items: center;
 		gap: $spacing-unit;
 	}
@@ -82,13 +83,21 @@ $spacing-unit: 1rem;
 		flex-direction: column;
 		align-items: center;
 		gap: $spacing-unit / 2;
+
+		h4 {
+			margin-bottom: $spacing-unit / 2;
+		}
+
+		.day-icon,
+		.night-icon {
+			margin-bottom: $spacing-unit / 4;
+		}
 	}
 }
 
 @media (max-width: $tablet) {
-	.container {
-		.header,
-		.five-day-forecast .forecast-day {
+	.five-day-forecast {
+		.forecast-day {
 			min-width: 100%;
 		}
 	}

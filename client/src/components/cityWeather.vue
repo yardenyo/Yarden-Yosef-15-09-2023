@@ -102,20 +102,23 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$font-family: "Helvetica Neue", sans-serif;
 $spacing-unit: 1rem;
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-backdrop: blur(10px);
 
 .city-weather {
 	display: flex;
 	flex-direction: column;
 	gap: $spacing-unit;
-	font-family: $font-family;
 	padding: $spacing-unit;
-	border-radius: 0.5rem;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 	width: 100%;
 	max-width: 1600px;
 	margin: 0 auto;
+	background: $glass-bg;
+	backdrop-filter: $glass-backdrop;
+	border-radius: 0.5rem;
+	border: 1px solid rgba(255, 255, 255, 0.2);
 
 	.container {
 		display: flex;
@@ -128,7 +131,10 @@ $spacing-unit: 1rem;
 			justify-content: space-between;
 			gap: $spacing-unit;
 			padding: $spacing-unit;
-			border-radius: 0.25rem;
+			background: $glass-bg;
+			backdrop-filter: $glass-backdrop;
+			border-radius: 0.5rem;
+			border: 1px solid rgba(255, 255, 255, 0.2);
 
 			.city-wrapper {
 				display: flex;
@@ -159,7 +165,10 @@ $spacing-unit: 1rem;
 			flex-direction: column;
 			gap: $spacing-unit;
 			padding: $spacing-unit;
-			border-radius: 0.25rem;
+			background: $glass-bg;
+			backdrop-filter: $glass-backdrop;
+			border-radius: 0.5rem;
+			border: 1px solid rgba(255, 255, 255, 0.2);
 
 			.current-weather {
 				display: flex;
