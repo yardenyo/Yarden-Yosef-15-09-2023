@@ -1,0 +1,127 @@
+.light {
+	.view {
+		background-color: $background;
+	}
+
+	.text {
+		color: $dark-900;
+	}
+
+	.navbar {
+		background: $dark-900;
+
+		.logo {
+			color: $white;
+		}
+
+		.navbar-link {
+			color: $white;
+
+			&:hover {
+				background: $primary;
+			}
+		}
+
+		.nav-link {
+			color: $white;
+
+			&:hover {
+				background: $primary;
+			}
+		}
+	}
+
+	.theme-switcher {
+		background: $dark-900;
+
+		&:hover {
+			background: $primary;
+		}
+
+		.pi {
+			color: $white;
+		}
+	}
+
+	.temperature-switcher {
+		background: $dark-900;
+		color: $white;
+
+		&:hover {
+			background: $primary;
+		}
+	}
+
+	.hamburger-menu {
+		background: $dark-900;
+		color: $white;
+
+		.bar {
+			background: $white;
+		}
+	}
+}
+
+.dark {
+	.view {
+		background-color: $background-dark;
+	}
+
+	.text {
+		color: $white;
+	}
+
+	.navbar {
+		background: $primary;
+
+		.logo {
+			color: $dark-900;
+		}
+
+		.nav-link {
+			color: $dark-900;
+
+			&:hover {
+				background: $green-700;
+			}
+		}
+
+		.navbar-link {
+			color: $green-700;
+
+			&:hover {
+				background: $white;
+			}
+		}
+	}
+
+	.theme-switcher {
+		background: $primary;
+
+		&:hover {
+			background: $green-700;
+		}
+
+		.pi {
+			color: $dark-900;
+		}
+	}
+
+	.temperature-switcher {
+		background: $primary;
+		color: $dark-900;
+
+		&:hover {
+			background: $green-700;
+		}
+	}
+
+	.hamburger-menu {
+		background: $primary;
+		color: $dark-900;
+
+		.bar {
+			background: $dark-900;
+		}
+	}
+}

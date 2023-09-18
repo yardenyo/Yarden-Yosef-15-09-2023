@@ -1,0 +1,74 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
+	html {
+		font-size: $font-size-base;
+	}
+
+	body {
+		font-family: $font-family;
+		line-height: $line-height-base;
+		overflow-x: hidden;
+		overflow-y: auto;
+		letter-spacing: $letter-spacing;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-ms-overflow-style: none;
+
+		h1 {
+			@include font-size(2.5rem);
+			@include font-weight(300);
+			@include line-height(1.2);
+			@include letter-spacing(0);
+		}
+
+		h2 {
+			@include font-size(2rem);
+			@include font-weight(300);
+			@include line-height(1.2);
+			@include letter-spacing(0);
+		}
+
+		h3 {
+			@include font-size(1.5rem);
+			@include font-weight(300);
+			@include line-height(1.2);
+			@include letter-spacing(0);
+		}
+
+		h4 {
+			@include font-size(1.2rem);
+			@include font-weight(300);
+			@include line-height(1.2);
+			@include letter-spacing(0);
+		}
+
+		h5 {
+			@include font-size(1rem);
+			@include font-weight(300);
+			@include line-height(1.2);
+			@include letter-spacing(0);
+		}
+
+		h6 {
+			@include font-size(0.8rem);
+			@include font-weight(300);
+			@include line-height(1.2);
+			@include letter-spacing(0);
+		}
+
+		.view {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+}
