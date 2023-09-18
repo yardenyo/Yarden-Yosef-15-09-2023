@@ -8,6 +8,7 @@
 import { useTemperatureStore } from "@/stores/temperature.store";
 import { storeToRefs } from "pinia";
 import { computed, defineComponent } from "vue";
+import helpers from "@/helpers/app.helpers";
 
 export default defineComponent({
 	name: "TemperatureSwitcher",
@@ -19,8 +20,9 @@ export default defineComponent({
 			return temperature.value === "celsius" ? "°C" : "°F";
 		});
 
-		function toggleTemperature() {
-			temperatureStore.toggleTemperature();
+		async function toggleTemperature() {
+			await temperatureStore.toggleTemperature();
+			helpers.sendInfoMessage(`Temperature changed to ${temperature.value}`);
 		}
 		return {
 			temperature,
