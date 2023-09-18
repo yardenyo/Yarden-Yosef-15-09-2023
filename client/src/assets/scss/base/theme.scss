@@ -68,6 +68,22 @@
 			background: $white;
 		}
 	}
+
+	.city-weather {
+		background: $dark-900;
+
+		.header {
+			background: $white;
+			color: $dark-900;
+		}
+
+		.five-day-forecast {
+			.forecast-day {
+				background: $white;
+				color: $dark-900;
+			}
+		}
+	}
 }
 
 .dark {
@@ -138,6 +154,22 @@
 
 		.bar {
 			background: $dark-900;
+		}
+	}
+
+	.city-weather {
+		background: $primary;
+
+		.header {
+			background: $dark-900;
+			color: $white;
+		}
+
+		.five-day-forecast {
+			.forecast-day {
+				background: $dark-900;
+				color: $white;
+			}
 		}
 	}
 }

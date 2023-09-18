@@ -82,7 +82,6 @@ $spacing-unit: 1rem;
 	flex-direction: column;
 	gap: $spacing-unit;
 	font-family: $font-family;
-	background-color: #f9f9f9;
 	padding: $spacing-unit * 2;
 	border-radius: 0.5rem;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -102,7 +101,6 @@ $spacing-unit: 1rem;
 			justify-content: space-between;
 			gap: $spacing-unit;
 			padding: $spacing-unit;
-			background-color: #eaeaea;
 			border-radius: 0.25rem;
 		}
 
@@ -113,7 +111,6 @@ $spacing-unit: 1rem;
 
 			.forecast-day {
 				flex: 1;
-				background-color: #eaeaea;
 				border-radius: 0.25rem;
 				padding: $spacing-unit;
 				min-width: calc(20% - $spacing-unit);
@@ -127,10 +124,6 @@ $spacing-unit: 1rem;
 	@media (max-width: 768px) {
 		.container {
 			.header,
-			.five-day-forecast {
-				flex-direction: column;
-				align-items: flex-start;
-			}
 			.five-day-forecast .forecast-day {
 				min-width: 100%;
 			}
