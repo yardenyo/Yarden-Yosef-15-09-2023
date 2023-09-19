@@ -92,15 +92,15 @@ export default defineComponent({
 		}
 
 		onMounted(async () => {
-			// if (!isLocationSet.value) {
-			// 	await weatherStore.getCityByQuery("telaviv");
-			// 	await weatherStore.getCurrentConditions(cityInfo.value.Key);
-			// 	await weatherStore.getCityForecast(cityInfo.value.Key);
-			// } else {
-			// 	await weatherStore.getWeatherConditionsByGeoPosition(props.location);
-			// 	await weatherStore.getCurrentConditions(cityInfo.value.Key);
-			// 	await weatherStore.getCityForecast(cityInfo.value.Key);
-			// }
+			if (!isLocationSet.value) {
+				await weatherStore.getCityByQuery("telaviv");
+				await weatherStore.getCurrentConditions(cityInfo.value.Key);
+				await weatherStore.getCityForecast(cityInfo.value.Key);
+			} else {
+				await weatherStore.getWeatherConditionsByGeoPosition(props.location);
+				await weatherStore.getCurrentConditions(cityInfo.value.Key);
+				await weatherStore.getCityForecast(cityInfo.value.Key);
+			}
 		});
 
 		return {
