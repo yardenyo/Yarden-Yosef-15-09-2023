@@ -6,6 +6,7 @@ const path = require("path");
 
 const locationRoutes = require("../routes/locations.routes.js");
 const forecastsRoutes = require("../routes/forecasts.routes.js");
+const currentConditionsRoutes = require("../routes/currentConditions.routes.js");
 
 dotenv.config();
 
@@ -22,5 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/locations", locationRoutes);
 app.use("/forecasts", forecastsRoutes);
+app.use("/currentconditions", currentConditionsRoutes);
 
 module.exports = app;

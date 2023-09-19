@@ -1,3 +1,13 @@
+// Light theme glass variables
+$light-glass-bg: rgba(255, 255, 255, 0.1);
+$light-glass-backdrop: blur(10px);
+$light-glass-border: 1px solid rgba(255, 255, 255, 0.2);
+
+// Dark theme glass variables
+$dark-glass-bg: rgba(0, 0, 0, 0.1);
+$dark-glass-backdrop: blur(15px);
+$dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
+
 .light {
 	.view {
 		background-color: $background;
@@ -27,6 +37,7 @@
 
 			&:hover {
 				background: $primary;
+				color: $dark-900;
 			}
 		}
 
@@ -35,19 +46,18 @@
 
 			&:hover {
 				background: $primary;
+				color: $dark-900;
 			}
 		}
 	}
 
 	.theme-switcher {
 		background: $dark-900;
+		color: $white;
 
 		&:hover {
 			background: $primary;
-		}
-
-		.pi {
-			color: $white;
+			color: $dark-900;
 		}
 	}
 
@@ -57,6 +67,7 @@
 
 		&:hover {
 			background: $primary;
+			color: $dark-900;
 		}
 	}
 
@@ -66,6 +77,20 @@
 
 		.bar {
 			background: $white;
+		}
+	}
+
+	.city-weather {
+		background: $light-glass-bg;
+		backdrop-filter: $light-glass-backdrop;
+		border: $light-glass-border;
+		color: $dark-900;
+
+		.header,
+		.details-section {
+			background: $light-glass-bg;
+			backdrop-filter: $light-glass-backdrop;
+			border: $light-glass-border;
 		}
 	}
 }
@@ -98,12 +123,12 @@
 			color: $dark-900;
 
 			&:hover {
-				background: $green-700;
+				background: $dark-aqua;
 			}
 		}
 
 		.navbar-link {
-			color: $green-700;
+			color: $dark-aqua;
 
 			&:hover {
 				background: $white;
@@ -115,7 +140,7 @@
 		background: $primary;
 
 		&:hover {
-			background: $green-700;
+			background: $dark-aqua;
 		}
 
 		.pi {
@@ -128,7 +153,7 @@
 		color: $dark-900;
 
 		&:hover {
-			background: $green-700;
+			background: $dark-aqua;
 		}
 	}
 
@@ -138,6 +163,20 @@
 
 		.bar {
 			background: $dark-900;
+		}
+	}
+
+	.city-weather {
+		background: $dark-glass-bg;
+		backdrop-filter: $dark-glass-backdrop;
+		border: $dark-glass-border;
+		color: $white;
+
+		.header,
+		.details-section {
+			background: $dark-glass-bg;
+			backdrop-filter: $dark-glass-backdrop;
+			border: $dark-glass-border;
 		}
 	}
 }

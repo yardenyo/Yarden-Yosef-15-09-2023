@@ -2,27 +2,36 @@
 	<div class="city-weather">
 		<div class="container">
 			<div class="header">
-				<div class="weather-icon">
-					<img src="https://developer.accuweather.com/sites/default/files/02-s.png" alt="weather-icon" />
-				</div>
-				<div class="city-name">
-					<h2>{{ cityInfo.LocalizedName }}</h2>
-					<h3>{{ cityInfo.Country.LocalizedName }}</h3>
+				<div class="city-wrapper">
+					<div class="weather-icon">
+						<img
+							v-if="cityCurrentConditions.WeatherIcon <= 9"
+							:src="`https://developer.accuweather.com/sites/default/files/0${cityCurrentConditions.WeatherIcon}-s.png`"
+							alt="weather-icon" />
+						<img v-else :src="`https://developer.accuweather.com/sites/default/files/${cityCurrentConditions.WeatherIcon}-s.png`" alt="weather-icon" />
+					</div>
+					<div class="city-name">
+						<h2>{{ cityInfo.LocalizedName }}</h2>
+						<h3>{{ cityInfo.Country.LocalizedName }}</h3>
+					</div>
 				</div>
 				<div class="add-to-favorites">
-					<i class="pi pi-heart-fill"></i>
+					<i v-if="true" v-tooltip.top="'Add To Favorites'" class="pi pi-heart"></i>
+					<i v-else v-tooltip.top="'Remove From Favorites'" class="pi pi-heart-fill"></i>
 				</div>
 			</div>
-			<div class="five-day-forecast">
-				<div v-for="day in 5" :key="day" class="forecast-day">
-					<div class="day-icon">
-						<img :src="`https://developer.accuweather.com/sites/default/files/0${day}-s.png`" alt="weather-icon" />
-					</div>
-					<div class="day-info">
-						<span>Day {{ day }}</span>
-						<span>25°C</span>
+			<div class="details-section">
+				<div class="current-weather">
+					<div class="current-weather-info">
+						<div class="current-weather-temp">
+							{{ todayForecastTemprature }}
+						</div>
+						<div class="current-weather-text">{{ cityCurrentConditions.WeatherText }}</div>
 					</div>
 				</div>
+			</div>
+			<div class="forecast-section">
+				<ForeCast :cityForecast="cityForecast" />
 			</div>
 		</div>
 	</div>
@@ -31,11 +40,16 @@
 <script>
 import { defineComponent, computed, onMounted } from "vue";
 import { useWeatherStore } from "@/stores/weather.store";
+import { useTemperatureStore } from "@/stores/temperature.store";
 import { storeToRefs } from "pinia";
 import helpers from "@/helpers/app.helpers";
+import ForeCast from "@/components/ForeCast.vue";
 
 export default defineComponent({
 	name: "cityWeather",
+	components: {
+		ForeCast,
+	},
 	props: {
 		location: {
 			type: Object,
@@ -44,7 +58,9 @@ export default defineComponent({
 	},
 	setup(props) {
 		const weatherStore = useWeatherStore();
-		const { defaultCityInfo, locationCityInfo } = storeToRefs(weatherStore);
+		const temperatureStore = useTemperatureStore();
+		const { defaultCityInfo, locationCityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
+		const { temperature } = storeToRefs(temperatureStore);
 
 		const isLocationSet = computed(() => {
 			return !helpers.isNumpty(props.location);
@@ -54,12 +70,21 @@ export default defineComponent({
 			return isLocationSet.value ? locationCityInfo.value : defaultCityInfo.value;
 		});
 
+		const todayForecastTemprature = computed(() => {
+			return temperature.value === "celsius"
+				? `${cityCurrentConditions.value.Temperature.Metric.Value}°${cityCurrentConditions.value.Temperature.Metric.Unit}`
+				: `${cityCurrentConditions.value.Temperature.Imperial.Value}°${cityCurrentConditions.value.Temperature.Imperial.Unit}`;
+		});
+
 		onMounted(async () => {
 			if (!isLocationSet.value) {
 				await weatherStore.getCityByQuery("telaviv");
 				await weatherStore.getCurrentConditions(defaultCityInfo.value.Key);
+				await weatherStore.getCityForecast(defaultCityInfo.value.Key);
 			} else {
-				await weatherStore.getCityByGeoPosition(props.location);
+				await weatherStore.getWeatherConditionsByGeoPosition(props.location);
+				await weatherStore.getCurrentConditions(locationCityInfo.value.Key);
+				await weatherStore.getCityForecast(locationCityInfo.value.Key);
 			}
 		});
 
@@ -68,27 +93,32 @@ export default defineComponent({
 			defaultCityInfo,
 			locationCityInfo,
 			cityInfo,
+			cityForecast,
+			cityCurrentConditions,
+			todayForecastTemprature,
 		};
 	},
 });
 </script>
 
 <style lang="scss" scoped>
-$font-family: "Helvetica Neue", sans-serif;
 $spacing-unit: 1rem;
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-backdrop: blur(10px);
 
 .city-weather {
 	display: flex;
 	flex-direction: column;
 	gap: $spacing-unit;
-	font-family: $font-family;
-	background-color: #f9f9f9;
-	padding: $spacing-unit * 2;
-	border-radius: 0.5rem;
+	padding: $spacing-unit;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 	width: 100%;
-	max-width: 1200px;
+	max-width: 1600px;
 	margin: 0 auto;
+	background: $glass-bg;
+	backdrop-filter: $glass-backdrop;
+	border-radius: 0.5rem;
+	border: 1px solid rgba(255, 255, 255, 0.2);
 
 	.container {
 		display: flex;
@@ -97,42 +127,71 @@ $spacing-unit: 1rem;
 
 		.header {
 			display: flex;
-			flex-direction: row;
 			align-items: center;
 			justify-content: space-between;
 			gap: $spacing-unit;
 			padding: $spacing-unit;
-			background-color: #eaeaea;
-			border-radius: 0.25rem;
-		}
+			background: $glass-bg;
+			backdrop-filter: $glass-backdrop;
+			border-radius: 0.5rem;
+			border: 1px solid rgba(255, 255, 255, 0.2);
 
-		.five-day-forecast {
-			display: flex;
-			flex-wrap: wrap;
-			gap: $spacing-unit;
-
-			.forecast-day {
-				flex: 1;
-				background-color: #eaeaea;
-				border-radius: 0.25rem;
-				padding: $spacing-unit;
-				min-width: calc(20% - $spacing-unit);
+			.city-wrapper {
 				display: flex;
-				flex-direction: column;
 				align-items: center;
+				gap: $spacing-unit;
+			}
+
+			.add-to-favorites {
+				.pi-heart {
+					cursor: pointer;
+					font-size: 1.5rem;
+
+					&:hover {
+						color: $danger-primary;
+					}
+				}
+
+				.pi-heart-fill {
+					cursor: pointer;
+					font-size: 1.5rem;
+					color: $danger-primary;
+				}
 			}
 		}
-	}
 
-	@media (max-width: 768px) {
-		.container {
-			.header,
-			.five-day-forecast {
-				flex-direction: column;
-				align-items: flex-start;
-			}
-			.five-day-forecast .forecast-day {
-				min-width: 100%;
+		.details-section {
+			display: flex;
+			flex-direction: column;
+			gap: $spacing-unit;
+			padding: $spacing-unit;
+			background: $glass-bg;
+			backdrop-filter: $glass-backdrop;
+			border-radius: 0.5rem;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+
+			.current-weather {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: $spacing-unit;
+
+				.current-weather-info {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: $spacing-unit;
+
+					.current-weather-temp {
+						font-size: 2rem;
+						font-weight: 700;
+					}
+
+					.current-weather-text {
+						font-size: 1.5rem;
+						font-weight: 500;
+					}
+				}
 			}
 		}
 	}

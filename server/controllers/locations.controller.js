@@ -34,7 +34,7 @@ const locationsController = {
     try {
       const latitude = req.query.latitude;
       const longitude = req.query.longitude;
-      const link = `${api_host}/${resource}/${api_version}/locations/${latitude},${longitude}?apikey=${api_key}`;
+      const link = `${api_host}/${resource}/${api_version}/cities/geoposition/search?apikey=${api_key}&q=${latitude},${longitude}`;
       const response = await axios.get(link);
       res.json(response.data);
     } catch (error) {
