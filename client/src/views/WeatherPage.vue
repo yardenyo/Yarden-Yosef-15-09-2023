@@ -1,8 +1,5 @@
 <template>
-	<div v-if="showWelcomeMessage" class="welcome-page view">
-		<Welcome @start="start" />
-	</div>
-	<div v-else class="weather-page view">
+	<div class="weather-page view">
 		<div class="search-component">
 			<span class="p-float-label">
 				<AutoComplete class="auto-complete" optionLabel="LocalizedName" v-model="value" :suggestions="items" @complete="search" />
@@ -15,12 +12,11 @@
 </template>
 
 <script>
-import Welcome from "@/components/Welcome.vue";
 import { useLocationStore } from "@/stores/location.store";
 import { useWeatherStore } from "@/stores/weather.store";
 import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import cityWeather from "@/components/cityWeather.vue";
 import AutoComplete from "primevue/autocomplete";
 import Button from "primevue/button";
@@ -28,7 +24,6 @@ import Button from "primevue/button";
 export default defineComponent({
 	name: "WeatherPage",
 	components: {
-		Welcome,
 		cityWeather,
 		AutoComplete,
 		Button,
@@ -41,10 +36,6 @@ export default defineComponent({
 		const { theme } = storeToRefs(themeStore);
 		const value = ref();
 		const items = ref([]);
-
-		const showWelcomeMessage = computed(() => {
-			return locationStore.showWelcomeMessage;
-		});
 
 		const showWeather = computed(() => {
 			return locationStore.showWeather;
@@ -62,10 +53,6 @@ export default defineComponent({
 			return !value.value || typeof value.value === "string";
 		});
 
-		async function start() {
-			locationStore.getUserLocation();
-		}
-
 		async function search(event) {
 			items.value = await weatherStore.getCityBySearch(event.query);
 		}
@@ -75,9 +62,13 @@ export default defineComponent({
 			await weatherStore.getCityForecast(value.value.Key);
 		}
 
+		onMounted(async () => {
+			await locationStore.getPermissionStatus();
+			await locationStore.getUserLocation();
+		});
+
 		return {
 			location,
-			showWelcomeMessage,
 			showWeather,
 			showDefaultWeather,
 			severityBasedOnTheme,
@@ -85,7 +76,6 @@ export default defineComponent({
 			error,
 			value,
 			items,
-			start,
 			search,
 			submit,
 		};

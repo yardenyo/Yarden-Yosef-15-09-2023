@@ -9,8 +9,6 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 
 	const locationIsSet = computed(() => location.value.latitude && location.value.longitude);
 
-	const showWelcomeMessage = computed(() => !locationIsSet.value && promptAccess.value);
-
 	const showWeather = computed(() => locationIsSet.value && grantedAccess.value);
 
 	const showDefaultWeather = computed(() => !locationIsSet.value || deniedAccess.value);
@@ -59,15 +57,10 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 		const result = await navigator.permissions.query({ name: "geolocation" });
 		permissionStatus.value = result.state;
 
-		if (result.state === "granted") {
-			await getUserLocation();
-		} else {
-			localStorage.removeItem("location");
-		}
-
 		result.onchange = () => {
 			permissionStatus.value = result.state;
 			if (result.state === "granted") {
+				window.location.reload();
 				getUserLocation();
 			} else {
 				localStorage.removeItem("location");
@@ -84,7 +77,6 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 		error,
 		permissionStatus,
 		grantedAccess,
-		showWelcomeMessage,
 		showWeather,
 		showDefaultWeather,
 		getUserLocation,
