@@ -1,5 +1,5 @@
 <template>
-	<div class="weather-page view">
+	<div v-if="!loading" class="weather-page view">
 		<div class="search-component">
 			<span class="p-float-label">
 				<AutoComplete class="auto-complete" optionLabel="LocalizedName" v-model="value" :suggestions="items" @complete="search" />
@@ -9,6 +9,7 @@
 		</div>
 		<cityWeather :location="location" />
 	</div>
+	<LoadingComponent v-else />
 </template>
 
 <script>
@@ -20,6 +21,7 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 import cityWeather from "@/components/cityWeather.vue";
 import AutoComplete from "primevue/autocomplete";
 import Button from "primevue/button";
+import LoadingComponent from "@/components/LoadingComponent.vue";
 
 export default defineComponent({
 	name: "WeatherPage",
@@ -27,6 +29,7 @@ export default defineComponent({
 		cityWeather,
 		AutoComplete,
 		Button,
+		LoadingComponent,
 	},
 	setup() {
 		const locationStore = useLocationStore();
@@ -37,6 +40,7 @@ export default defineComponent({
 		const { theme } = storeToRefs(themeStore);
 		const value = ref();
 		const items = ref([]);
+		const loading = ref(false);
 
 		const showWeather = computed(() => {
 			return locationStore.showWeather;
@@ -65,11 +69,14 @@ export default defineComponent({
 		}
 
 		onMounted(async () => {
+			loading.value = true;
 			await locationStore.getPermissionStatus();
 			await locationStore.getUserLocation();
+			loading.value = false;
 		});
 
 		return {
+			loading,
 			location,
 			showWeather,
 			showDefaultWeather,

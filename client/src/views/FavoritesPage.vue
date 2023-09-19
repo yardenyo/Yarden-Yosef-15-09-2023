@@ -1,5 +1,5 @@
 <template>
-	<div class="favorites-page view">
+	<div v-if="!loading" class="favorites-page view">
 		<div class="favorites-container">
 			<div class="favorites-header">
 				<h1>Favorites</h1>
@@ -35,20 +35,23 @@
 			</div>
 		</div>
 	</div>
+	<LoadingComponent v-else />
 </template>
 
 <script>
-import { defineComponent, onMounted, computed } from "vue";
+import LoadingComponent from "@/components/LoadingComponent.vue";
 import { useFavoritesStore } from "@/stores/favorites.store";
 import { useTemperatureStore } from "@/stores/temperature.store";
 import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
 import Button from "primevue/button";
+import { computed, defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
 	name: "FavoritesPage",
 	components: {
 		Button,
+		LoadingComponent,
 	},
 	setup() {
 		const favoritesStore = useFavoritesStore();
@@ -57,6 +60,7 @@ export default defineComponent({
 		const { favorites, favoritesFullInfo } = storeToRefs(favoritesStore);
 		const { temperature } = storeToRefs(temperatureStore);
 		const { theme } = storeToRefs(themeStore);
+		const loading = ref(false);
 
 		const severityBasedTheme = computed(() => {
 			return theme.value === "light" ? "secondary" : "success";
@@ -86,11 +90,14 @@ export default defineComponent({
 			console.log(favorite);
 		}
 
-		onMounted(() => {
-			favoritesStore.getFavoritesWeather();
+		onMounted(async () => {
+			loading.value = true;
+			await favoritesStore.getFavoritesWeather();
+			loading.value = false;
 		});
 
 		return {
+			loading,
 			favorites,
 			favoritesFullInfo,
 			severityBasedTheme,

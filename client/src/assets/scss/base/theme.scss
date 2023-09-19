@@ -89,6 +89,10 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 			border: $light-glass-border;
 		}
 	}
+
+	.circle {
+		background: $dark-900;
+	}
 }
 
 .dark {
@@ -173,5 +177,9 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 			backdrop-filter: $dark-glass-backdrop;
 			border: $dark-glass-border;
 		}
+	}
+
+	.circle {
+		background: $white;
 	}
 }
