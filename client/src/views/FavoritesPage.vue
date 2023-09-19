@@ -9,7 +9,8 @@
 					<div class="favorites-list-item-header">
 						<h2>{{ favorite.LocalizedName }}</h2>
 						<div class="favorites-list-item-header-buttons">
-							<Button v-if="favoriteExists(favorite.Key)" type="button" icon="pi pi-trash" severity="danger" @click="removeFromFavorites(favorite.Key)" />
+							<Button type="button" icon="pi pi-search" :severity="severityBasedTheme" @click="navigateToWeatherPage(favorite)" />
+							<Button type="button" icon="pi pi-trash" severity="danger" @click="removeFromFavorites(favorite.Key)" />
 						</div>
 					</div>
 					<div class="favorites-list-item-body">
@@ -40,6 +41,7 @@
 import { defineComponent, onMounted, computed } from "vue";
 import { useFavoritesStore } from "@/stores/favorites.store";
 import { useTemperatureStore } from "@/stores/temperature.store";
+import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
 import Button from "primevue/button";
 
@@ -51,8 +53,14 @@ export default defineComponent({
 	setup() {
 		const favoritesStore = useFavoritesStore();
 		const temperatureStore = useTemperatureStore();
+		const themeStore = useThemeStore();
 		const { favorites, favoritesFullInfo } = storeToRefs(favoritesStore);
 		const { temperature } = storeToRefs(temperatureStore);
+		const { theme } = storeToRefs(themeStore);
+
+		const severityBasedTheme = computed(() => {
+			return theme.value === "light" ? "secondary" : "success";
+		});
 
 		const computedTemperature = computed(() => {
 			return temperature.value === "celsius" ? "Metric" : "Imperial";
@@ -74,6 +82,10 @@ export default defineComponent({
 			favoritesStore.removeFromFavorites(key);
 		}
 
+		function navigateToWeatherPage(favorite) {
+			console.log(favorite);
+		}
+
 		onMounted(() => {
 			favoritesStore.getFavoritesWeather();
 		});
@@ -81,10 +93,12 @@ export default defineComponent({
 		return {
 			favorites,
 			favoritesFullInfo,
+			severityBasedTheme,
 			getTemperature,
 			favoriteExists,
 			addToFavorites,
 			removeFromFavorites,
+			navigateToWeatherPage,
 		};
 	},
 });
