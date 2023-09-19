@@ -59,11 +59,15 @@ export default defineComponent({
 	setup(props) {
 		const weatherStore = useWeatherStore();
 		const temperatureStore = useTemperatureStore();
-		const { cityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
+		const { defaultCityInfo, locationCityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
 		const { temperature } = storeToRefs(temperatureStore);
 
 		const isLocationSet = computed(() => {
 			return !helpers.isNumpty(props.location);
+		});
+
+		const cityInfo = computed(() => {
+			return isLocationSet.value ? locationCityInfo.value : defaultCityInfo.value;
 		});
 
 		const todayForecastTemprature = computed(() => {
@@ -75,17 +79,19 @@ export default defineComponent({
 		onMounted(async () => {
 			if (!isLocationSet.value) {
 				await weatherStore.getCityByQuery("telaviv");
-				await weatherStore.getCurrentConditions(cityInfo.value.Key);
-				await weatherStore.getCityForecast(cityInfo.value.Key);
+				await weatherStore.getCurrentConditions(defaultCityInfo.value.Key);
+				await weatherStore.getCityForecast(defaultCityInfo.value.Key);
 			} else {
 				await weatherStore.getWeatherConditionsByGeoPosition(props.location);
-				await weatherStore.getCurrentConditions(cityInfo.value.Key);
-				await weatherStore.getCityForecast(cityInfo.value.Key);
+				await weatherStore.getCurrentConditions(locationCityInfo.value.Key);
+				await weatherStore.getCityForecast(locationCityInfo.value.Key);
 			}
 		});
 
 		return {
 			isLocationSet,
+			defaultCityInfo,
+			locationCityInfo,
 			cityInfo,
 			cityForecast,
 			cityCurrentConditions,

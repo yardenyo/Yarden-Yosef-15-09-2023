@@ -7,25 +7,33 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 	const error = ref(false);
 	const permissionStatus = ref(null);
 
-	const locationIsSet = computed(() => location.value.latitude && location.value.longitude);
+	const locationIsSet = computed(() => {
+		return location.value.latitude && location.value.longitude;
+	});
 
-	const showWelcomeMessage = computed(() => !locationIsSet.value && promptAccess.value);
+	const showWelcomeMessage = computed(() => {
+		return !locationIsSet.value && promptAccess.value;
+	});
 
-	const showWeather = computed(() => locationIsSet.value && grantedAccess.value);
+	const showWeather = computed(() => {
+		return locationIsSet.value && grantedAccess.value;
+	});
 
-	const showDefaultWeather = computed(() => !locationIsSet.value || deniedAccess.value);
+	const showDefaultWeather = computed(() => {
+		return !locationIsSet.value || deniedAccess.value;
+	});
 
-	const grantedAccess = computed(() => permissionStatus.value === "granted");
+	const grantedAccess = computed(() => {
+		return permissionStatus.value === "granted";
+	});
 
-	const deniedAccess = computed(() => permissionStatus.value === "denied");
+	const deniedAccess = computed(() => {
+		return permissionStatus.value === "denied";
+	});
 
-	const promptAccess = computed(() => permissionStatus.value === "prompt");
-
-	async function getCurrentPosition() {
-		return new Promise((resolve, reject) => {
-			navigator.geolocation.getCurrentPosition(resolve, reject);
-		});
-	}
+	const promptAccess = computed(() => {
+		return permissionStatus.value === "prompt";
+	});
 
 	async function getUserLocation() {
 		if (!navigator.geolocation) {
@@ -34,45 +42,34 @@ export const useLocationStore = defineStore("useLocationStore", () => {
 			return;
 		}
 
-		try {
-			const position = await getCurrentPosition();
-			error.value = false;
-			location.value = {
-				latitude: position.coords.latitude,
-				longitude: position.coords.longitude,
-			};
-			localStorage.setItem("location", JSON.stringify(location.value));
-		} catch (err) {
-			error.value = true;
-			localStorage.removeItem("location");
-			helpers.sendErrorMessage(err.message);
-		}
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				error.value = false;
+				location.value = {
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude,
+				};
+				localStorage.setItem("location", JSON.stringify(location.value));
+				getPermissionStatus();
+			},
+			(err) => {
+				error.value = true;
+				getPermissionStatus();
+				helpers.sendErrorMessage(err.message);
+			},
+		);
 	}
 
 	async function getPermissionStatus() {
 		if (!navigator.permissions) {
 			error.value = true;
-			helpers.sendErrorMessage("Permissions API is not supported by your browser");
+			helpers.sendErrorMessage("Geolocation is not supported by your browser");
 			return;
 		}
 
-		const result = await navigator.permissions.query({ name: "geolocation" });
-		permissionStatus.value = result.state;
-
-		if (result.state === "granted") {
-			await getUserLocation();
-		} else {
-			localStorage.removeItem("location");
-		}
-
-		result.onchange = () => {
+		navigator.permissions.query({ name: "geolocation" }).then((result) => {
 			permissionStatus.value = result.state;
-			if (result.state === "granted") {
-				getUserLocation();
-			} else {
-				localStorage.removeItem("location");
-			}
-		};
+		});
 	}
 
 	onMounted(async () => {

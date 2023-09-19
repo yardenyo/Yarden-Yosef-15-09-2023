@@ -5,10 +5,9 @@
 	<div v-else class="weather-page view">
 		<div class="search-component">
 			<span class="p-float-label">
-				<AutoComplete class="auto-complete" optionLabel="LocalizedName" v-model="value" :suggestions="items" @complete="search" />
+				<AutoComplete class="auto-complete" v-model="value" inputId="ac" :suggestions="items" @complete="search" />
 				<label for="ac">Search For A City</label>
 			</span>
-			<Button :disabled="buttonDisabled" type="submit" label="Submit" :severity="severityBasedOnTheme" @click="submit" />
 		</div>
 		<cityWeather :location="location" />
 	</div>
@@ -17,13 +16,10 @@
 <script>
 import Welcome from "@/components/Welcome.vue";
 import { useLocationStore } from "@/stores/location.store";
-import { useWeatherStore } from "@/stores/weather.store";
-import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
 import { defineComponent, ref, computed } from "vue";
 import cityWeather from "@/components/cityWeather.vue";
 import AutoComplete from "primevue/autocomplete";
-import Button from "primevue/button";
 
 export default defineComponent({
 	name: "WeatherPage",
@@ -31,15 +27,11 @@ export default defineComponent({
 		Welcome,
 		cityWeather,
 		AutoComplete,
-		Button,
 	},
 	setup() {
 		const locationStore = useLocationStore();
-		const weatherStore = useWeatherStore();
-		const themeStore = useThemeStore();
 		const { location, error } = storeToRefs(locationStore);
-		const { theme } = storeToRefs(themeStore);
-		const value = ref();
+		const value = ref("");
 		const items = ref([]);
 
 		const showWelcomeMessage = computed(() => {
@@ -54,40 +46,22 @@ export default defineComponent({
 			return locationStore.showDefaultWeather;
 		});
 
-		const severityBasedOnTheme = computed(() => {
-			return theme.value === "light" ? "secondary" : "success";
-		});
-
-		const buttonDisabled = computed(() => {
-			return !value.value || typeof value.value === "string";
-		});
-
 		async function start() {
 			locationStore.getUserLocation();
 		}
 
-		async function search(event) {
-			items.value = await weatherStore.getCityBySearch(event.query);
-		}
-
-		async function submit() {
-			await weatherStore.getCurrentConditions(value.value.Key);
-			await weatherStore.getCityForecast(value.value.Key);
-		}
+		async function search() {}
 
 		return {
 			location,
 			showWelcomeMessage,
 			showWeather,
 			showDefaultWeather,
-			severityBasedOnTheme,
-			buttonDisabled,
 			error,
 			value,
 			items,
 			start,
 			search,
-			submit,
 		};
 	},
 });
@@ -102,9 +76,7 @@ export default defineComponent({
 	.search-component {
 		width: 25%;
 		display: flex;
-		flex-direction: column;
 		justify-content: center;
-		gap: 1rem;
 
 		.p-float-label {
 			width: 100%;
