@@ -82,15 +82,15 @@ $glass-backdrop: blur(10px);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: $spacing-unit / 2;
+		gap: calc($spacing-unit / 2);
 
 		h4 {
-			margin-bottom: $spacing-unit / 2;
+			margin-bottom: calc($spacing-unit / 2);
 		}
 
 		.day-icon,
 		.night-icon {
-			margin-bottom: $spacing-unit / 4;
+			margin-bottom: calc($spacing-unit / 4);
 		}
 	}
 }

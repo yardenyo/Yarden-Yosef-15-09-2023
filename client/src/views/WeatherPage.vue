@@ -1,42 +1,42 @@
 <template>
-	<div v-if="showWelcomeMessage" class="welcome-page view">
-		<Welcome @start="start" />
-	</div>
-	<div v-else class="weather-page view">
+	<div class="weather-page view">
 		<div class="search-component">
 			<span class="p-float-label">
-				<AutoComplete class="auto-complete" v-model="value" inputId="ac" :suggestions="items" @complete="search" />
+				<AutoComplete class="auto-complete" optionLabel="LocalizedName" v-model="value" :suggestions="items" @complete="search" />
 				<label for="ac">Search For A City</label>
 			</span>
+			<Button :disabled="buttonDisabled" type="submit" label="Submit" :severity="severityBasedOnTheme" @click="submit" />
 		</div>
 		<cityWeather :location="location" />
 	</div>
 </template>
 
 <script>
-import Welcome from "@/components/Welcome.vue";
 import { useLocationStore } from "@/stores/location.store";
+import { useWeatherStore } from "@/stores/weather.store";
+import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import cityWeather from "@/components/cityWeather.vue";
 import AutoComplete from "primevue/autocomplete";
+import Button from "primevue/button";
 
 export default defineComponent({
 	name: "WeatherPage",
 	components: {
-		Welcome,
 		cityWeather,
 		AutoComplete,
+		Button,
 	},
 	setup() {
 		const locationStore = useLocationStore();
+		const weatherStore = useWeatherStore();
+		const themeStore = useThemeStore();
 		const { location, error } = storeToRefs(locationStore);
-		const value = ref("");
+		const { cityInfo } = storeToRefs(weatherStore);
+		const { theme } = storeToRefs(themeStore);
+		const value = ref();
 		const items = ref([]);
-
-		const showWelcomeMessage = computed(() => {
-			return locationStore.showWelcomeMessage;
-		});
 
 		const showWeather = computed(() => {
 			return locationStore.showWeather;
@@ -46,22 +46,40 @@ export default defineComponent({
 			return locationStore.showDefaultWeather;
 		});
 
-		async function start() {
-			locationStore.getUserLocation();
+		const severityBasedOnTheme = computed(() => {
+			return theme.value === "light" ? "secondary" : "success";
+		});
+
+		const buttonDisabled = computed(() => {
+			return !value.value || typeof value.value === "string";
+		});
+
+		async function search(event) {
+			items.value = await weatherStore.getCityBySearch(event.query);
 		}
 
-		async function search() {}
+		async function submit() {
+			cityInfo.value = value.value;
+			await weatherStore.getCurrentConditions(value.value.Key);
+			await weatherStore.getCityForecast(value.value.Key);
+		}
+
+		onMounted(async () => {
+			await locationStore.getPermissionStatus();
+			await locationStore.getUserLocation();
+		});
 
 		return {
 			location,
-			showWelcomeMessage,
 			showWeather,
 			showDefaultWeather,
+			severityBasedOnTheme,
+			buttonDisabled,
 			error,
 			value,
 			items,
-			start,
 			search,
+			submit,
 		};
 	},
 });
@@ -76,7 +94,9 @@ export default defineComponent({
 	.search-component {
 		width: 25%;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
+		gap: 1rem;
 
 		.p-float-label {
 			width: 100%;
