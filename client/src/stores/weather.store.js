@@ -4,10 +4,9 @@ import helpers from "@/helpers/app.helpers";
 import locationsApi from "@/api/locations.api";
 import currentConditionsApi from "@/api/currentConditions.api";
 import forecastsApi from "@/api/forecasts.api";
-import { getLocationByQuery, getLocationById, getLocationByGeoPosition, getLocationForecastById } from "@/helpers/localWeather.js";
 
 export const useWeatherStore = defineStore("useWeatherStore", () => {
-	const defaultCityInfo = ref({
+	const cityInfo = ref({
 		Version: 0,
 		Key: "",
 		Type: "",
@@ -39,61 +38,6 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 			Name: "",
 			GmtOffset: 0,
 			IsDaylightSaving: true,
-			NextOffsetChange: "",
-		},
-		GeoPosition: {
-			Latitude: 0,
-			Longitude: 0,
-			Elevation: {
-				Metric: {
-					Value: 0,
-					Unit: "",
-					UnitType: 0,
-				},
-				Imperial: {
-					Value: 0,
-					Unit: "",
-					UnitType: 0,
-				},
-			},
-		},
-		IsAlias: false,
-		SupplementalAdminAreas: [],
-		DataSets: [],
-	});
-
-	const locationCityInfo = ref({
-		Version: 0,
-		Key: "",
-		Type: "",
-		Rank: 0,
-		LocalizedName: "",
-		EnglishName: "",
-		PrimaryPostalCode: "",
-		Region: {
-			ID: "",
-			LocalizedName: "",
-			EnglishName: "",
-		},
-		Country: {
-			ID: "",
-			LocalizedName: "",
-			EnglishName: "",
-		},
-		AdministrativeArea: {
-			ID: "",
-			LocalizedName: "",
-			EnglishName: "",
-			Level: 0,
-			LocalizedType: "",
-			EnglishType: "",
-			CountryID: "",
-		},
-		TimeZone: {
-			Code: "",
-			Name: "",
-			GmtOffset: 0,
-			IsDaylightSaving: false,
 			NextOffsetChange: "",
 		},
 		GeoPosition: {
@@ -191,39 +135,37 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 	});
 
 	async function getCityByQuery(city) {
-		// const response = await locationsApi.getCitySearch(city);
-		// defaultCityInfo.value = response.data[0];
-		const response = await getLocationByQuery(city);
-		defaultCityInfo.value = response[0];
+		const response = await locationsApi.getCitySearch(city);
+		cityInfo.value = response.data[0];
+	}
+
+	async function getCityBySearch(query) {
+		const response = await locationsApi.getAutoCompleteCities(query);
+		cityInfo.value = response.data[0];
+		return response.data;
 	}
 
 	async function getCurrentConditions(locationId) {
-		// const response = await currentConditionsApi.getCurrentConditions(locationId);
-		// cityCurrentConditions.value = response.data[0];
-		const response = await getLocationById(locationId);
-		cityCurrentConditions.value = response[0];
+		const response = await currentConditionsApi.getCurrentConditions(locationId);
+		cityCurrentConditions.value = response.data[0];
 	}
 
 	async function getWeatherConditionsByGeoPosition({ latitude, longitude }) {
-		// const response = await locationsApi.getWeatherConditionsByGeoPosition(latitude, longitude);
-		// locationCityInfo.value = response.data;
-		const response = await getLocationByGeoPosition({ latitude, longitude });
-		locationCityInfo.value = response;
+		const response = await locationsApi.getWeatherConditionsByGeoPosition(latitude, longitude);
+		cityInfo.value = response.data;
 	}
 
 	async function getCityForecast(locationId, isMetric) {
-		// const response = await forecastsApi.getCityForecast(locationId, isMetric);
-		// cityForecast.value = response.data;
-		const response = await getLocationForecastById(locationId, isMetric);
-		cityForecast.value = response;
+		const response = await forecastsApi.getCityForecast(locationId, isMetric);
+		cityForecast.value = response.data;
 	}
 
 	return {
-		defaultCityInfo,
-		locationCityInfo,
+		cityInfo,
 		cityCurrentConditions,
 		cityForecast,
 		getCityByQuery,
+		getCityBySearch,
 		getCurrentConditions,
 		getWeatherConditionsByGeoPosition,
 		getCityForecast,
