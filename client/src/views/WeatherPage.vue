@@ -33,6 +33,7 @@ export default defineComponent({
 		const weatherStore = useWeatherStore();
 		const themeStore = useThemeStore();
 		const { location, error } = storeToRefs(locationStore);
+		const { cityInfo } = storeToRefs(weatherStore);
 		const { theme } = storeToRefs(themeStore);
 		const value = ref();
 		const items = ref([]);
@@ -58,6 +59,7 @@ export default defineComponent({
 		}
 
 		async function submit() {
+			cityInfo.value = value.value;
 			await weatherStore.getCurrentConditions(value.value.Key);
 			await weatherStore.getCityForecast(value.value.Key);
 		}

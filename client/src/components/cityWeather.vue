@@ -16,8 +16,12 @@
 					</div>
 				</div>
 				<div class="add-to-favorites">
-					<i v-if="true" v-tooltip.top="'Add To Favorites'" class="pi pi-heart"></i>
-					<i v-else v-tooltip.top="'Remove From Favorites'" class="pi pi-heart-fill"></i>
+					<template v-if="!favoriteExists()">
+						<i v-tooltip.top="'Add To Favorites'" class="pi pi-heart" @click="addToFavorites"></i>
+					</template>
+					<template v-else>
+						<i v-tooltip.top="'Remove From Favorites'" class="pi pi-heart-fill" @click="removeFromFavorites"></i>
+					</template>
 				</div>
 			</div>
 			<div class="details-section">
@@ -41,6 +45,7 @@
 import { defineComponent, computed, onMounted } from "vue";
 import { useWeatherStore } from "@/stores/weather.store";
 import { useTemperatureStore } from "@/stores/temperature.store";
+import { useFavoritesStore } from "@/stores/favorites.store";
 import { storeToRefs } from "pinia";
 import helpers from "@/helpers/app.helpers";
 import ForeCast from "@/components/ForeCast.vue";
@@ -59,6 +64,7 @@ export default defineComponent({
 	setup(props) {
 		const weatherStore = useWeatherStore();
 		const temperatureStore = useTemperatureStore();
+		const favoritesStore = useFavoritesStore();
 		const { cityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
 		const { temperature } = storeToRefs(temperatureStore);
 
@@ -72,16 +78,29 @@ export default defineComponent({
 				: `${cityCurrentConditions.value.Temperature.Imperial.Value}°${cityCurrentConditions.value.Temperature.Imperial.Unit}`;
 		});
 
+		function favoriteExists() {
+			const answer = favoritesStore.favoriteExists(cityInfo.value.Key);
+			return answer;
+		}
+
+		async function addToFavorites() {
+			await favoritesStore.addToFavorites(cityInfo.value);
+		}
+
+		async function removeFromFavorites() {
+			await favoritesStore.removeFromFavorites(cityInfo.value.Key);
+		}
+
 		onMounted(async () => {
-			if (!isLocationSet.value) {
-				await weatherStore.getCityByQuery("telaviv");
-				await weatherStore.getCurrentConditions(cityInfo.value.Key);
-				await weatherStore.getCityForecast(cityInfo.value.Key);
-			} else {
-				await weatherStore.getWeatherConditionsByGeoPosition(props.location);
-				await weatherStore.getCurrentConditions(cityInfo.value.Key);
-				await weatherStore.getCityForecast(cityInfo.value.Key);
-			}
+			// if (!isLocationSet.value) {
+			// 	await weatherStore.getCityByQuery("telaviv");
+			// 	await weatherStore.getCurrentConditions(cityInfo.value.Key);
+			// 	await weatherStore.getCityForecast(cityInfo.value.Key);
+			// } else {
+			// 	await weatherStore.getWeatherConditionsByGeoPosition(props.location);
+			// 	await weatherStore.getCurrentConditions(cityInfo.value.Key);
+			// 	await weatherStore.getCityForecast(cityInfo.value.Key);
+			// }
 		});
 
 		return {
@@ -90,6 +109,9 @@ export default defineComponent({
 			cityForecast,
 			cityCurrentConditions,
 			todayForecastTemprature,
+			favoriteExists,
+			addToFavorites,
+			removeFromFavorites,
 		};
 	},
 });

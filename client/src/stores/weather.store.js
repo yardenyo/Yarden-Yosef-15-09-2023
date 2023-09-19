@@ -141,7 +141,6 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 
 	async function getCityBySearch(query) {
 		const response = await locationsApi.getAutoCompleteCities(query);
-		cityInfo.value = response.data[0];
 		return response.data;
 	}
 
