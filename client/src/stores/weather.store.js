@@ -6,6 +6,7 @@ import currentConditionsApi from "@/api/currentConditions.api";
 import forecastsApi from "@/api/forecasts.api";
 
 export const useWeatherStore = defineStore("useWeatherStore", () => {
+	const searched = ref(false);
 	const cityInfo = ref({
 		Version: 0,
 		Key: "",
@@ -141,6 +142,7 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 
 	async function getCityBySearch(query) {
 		const response = await locationsApi.getAutoCompleteCities(query);
+		searched.value = true;
 		return response.data;
 	}
 
@@ -164,6 +166,7 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 		cityInfo,
 		cityCurrentConditions,
 		cityForecast,
+		searched,
 		getCityByQuery,
 		getCityBySearch,
 		getCurrentConditions,

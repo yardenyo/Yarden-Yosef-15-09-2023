@@ -49,6 +49,7 @@ import { useThemeStore } from "@/stores/theme.store";
 import { storeToRefs } from "pinia";
 import Button from "primevue/button";
 import { computed, defineComponent, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
 	name: "FavoritesPage",
@@ -57,6 +58,7 @@ export default defineComponent({
 		LoadingComponent,
 	},
 	setup() {
+		const router = useRouter();
 		const favoritesStore = useFavoritesStore();
 		const temperatureStore = useTemperatureStore();
 		const themeStore = useThemeStore();
@@ -89,8 +91,10 @@ export default defineComponent({
 			favoritesStore.removeFromFavorites(key);
 		}
 
-		function navigateToWeatherPage(favorite) {
-			console.log(favorite);
+		async function navigateToWeatherPage(favorite) {
+			loading.value = true;
+			await router.push({ name: "WeatherPage", params: { location: favorite } });
+			loading.value = false;
 		}
 
 		onMounted(async () => {

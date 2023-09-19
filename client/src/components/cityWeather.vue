@@ -68,7 +68,7 @@ export default defineComponent({
 		const weatherStore = useWeatherStore();
 		const temperatureStore = useTemperatureStore();
 		const favoritesStore = useFavoritesStore();
-		const { cityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
+		const { cityInfo, cityCurrentConditions, cityForecast, searched } = storeToRefs(weatherStore);
 		const { temperature } = storeToRefs(temperatureStore);
 		const loading = ref(false);
 
@@ -98,6 +98,7 @@ export default defineComponent({
 		}
 
 		onMounted(async () => {
+			if (searched.value) return;
 			loading.value = true;
 			if (!isLocationSet.value) {
 				await weatherStore.getCityByQuery("telaviv");

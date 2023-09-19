@@ -22,6 +22,7 @@ import cityWeather from "@/components/cityWeather.vue";
 import AutoComplete from "primevue/autocomplete";
 import Button from "primevue/button";
 import LoadingComponent from "@/components/LoadingComponent.vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
 	name: "WeatherPage",
@@ -32,6 +33,7 @@ export default defineComponent({
 		LoadingComponent,
 	},
 	setup() {
+		const route = useRoute();
 		const locationStore = useLocationStore();
 		const weatherStore = useWeatherStore();
 		const themeStore = useThemeStore();
@@ -63,9 +65,11 @@ export default defineComponent({
 		}
 
 		async function submit() {
+			loading.value = true;
 			cityInfo.value = value.value;
 			await weatherStore.getCurrentConditions(value.value.Key);
 			await weatherStore.getCityForecast(value.value.Key);
+			loading.value = false;
 		}
 
 		onMounted(async () => {
