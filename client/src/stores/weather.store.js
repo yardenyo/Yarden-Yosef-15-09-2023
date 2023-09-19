@@ -147,6 +147,7 @@ export const useWeatherStore = defineStore("useWeatherStore", () => {
 	async function getCurrentConditions(locationId) {
 		const response = await currentConditionsApi.getCurrentConditions(locationId);
 		cityCurrentConditions.value = response.data[0];
+		return response.data[0];
 	}
 
 	async function getWeatherConditionsByGeoPosition({ latitude, longitude }) {

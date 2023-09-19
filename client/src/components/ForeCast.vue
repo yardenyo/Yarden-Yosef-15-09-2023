@@ -10,7 +10,7 @@
 					</div>
 					<div class="day-info">
 						<span>{{ day.Day.IconPhrase }}</span>
-						<span>{{ day.Temperature.Maximum.Value }}°{{ day.Temperature.Maximum.Unit }}</span>
+						<span>{{ convertTemperature(day.Temperature.Maximum.Value) }}</span>
 					</div>
 				</div>
 				<div class="night-info">
@@ -21,7 +21,7 @@
 					</div>
 					<div class="night-info">
 						<span>{{ day.Night.IconPhrase }}</span>
-						<span>{{ day.Temperature.Minimum.Value }}°{{ day.Temperature.Minimum.Unit }}</span>
+						<span>{{ convertTemperature(day.Temperature.Minimum.Value) }}</span>
 					</div>
 				</div>
 			</div>
@@ -31,6 +31,8 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useTemperatureStore } from "@/stores/temperature.store";
+import { storeToRefs } from "pinia";
 
 export default defineComponent({
 	name: "ForeCast",
@@ -41,7 +43,18 @@ export default defineComponent({
 		},
 	},
 	setup() {
-		return {};
+		const temperatureStore = useTemperatureStore();
+		const { temperature } = storeToRefs(temperatureStore);
+
+		function convertTemperature(value) {
+			return temperature.value === "celsius" ? `${value}°C` : convertCelciusToFahrenheit(value);
+		}
+
+		function convertCelciusToFahrenheit(value) {
+			return `${Math.round((value * 9) / 5 + 32)}°F`;
+		}
+
+		return { convertTemperature };
 	},
 });
 </script>

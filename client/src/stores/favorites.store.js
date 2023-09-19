@@ -1,9 +1,14 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted } from "vue";
 import helpers from "@/helpers/app.helpers";
+import { useWeatherStore } from "@/stores/weather.store";
 
 export const useFavoritesStore = defineStore("useFavoritesStore", () => {
+	const weatherStore = useWeatherStore();
+
 	const favorites = ref(JSON.parse(localStorage.getItem("favorites")) || []);
+
+	const favoritesFullInfo = ref([]);
 
 	const favoritesExist = computed(() => favorites.value.length > 0);
 
@@ -29,12 +34,24 @@ export const useFavoritesStore = defineStore("useFavoritesStore", () => {
 		localStorage.setItem("favorites", JSON.stringify(favorites.value));
 	}
 
+	async function getFavoritesWeather() {
+		if (!favoritesExist.value) return;
+
+		const favoritesKeys = favorites.value.map((f) => f.Key);
+		for (const key of favoritesKeys) {
+			const response = await weatherStore.getCurrentConditions(key);
+			favoritesFullInfo.value.push(response);
+		}
+	}
+
 	return {
 		favorites,
 		favoritesExist,
+		favoritesFullInfo,
 		showFavorites,
 		favoriteExists,
 		addToFavorites,
 		removeFromFavorites,
+		getFavoritesWeather,
 	};
 });

@@ -1,5 +1,5 @@
 <template>
-	<div class="city-weather">
+	<div v-if="!loading" class="city-weather">
 		<div class="container">
 			<div class="header">
 				<div class="city-wrapper">
@@ -39,21 +39,24 @@
 			</div>
 		</div>
 	</div>
+	<LoadingComponent v-else />
 </template>
 
 <script>
-import { defineComponent, computed, onMounted } from "vue";
+import { ref, defineComponent, computed, onMounted } from "vue";
 import { useWeatherStore } from "@/stores/weather.store";
 import { useTemperatureStore } from "@/stores/temperature.store";
 import { useFavoritesStore } from "@/stores/favorites.store";
 import { storeToRefs } from "pinia";
 import helpers from "@/helpers/app.helpers";
 import ForeCast from "@/components/ForeCast.vue";
+import LoadingComponent from "@/components/LoadingComponent.vue";
 
 export default defineComponent({
 	name: "cityWeather",
 	components: {
 		ForeCast,
+		LoadingComponent,
 	},
 	props: {
 		location: {
@@ -67,6 +70,7 @@ export default defineComponent({
 		const favoritesStore = useFavoritesStore();
 		const { cityInfo, cityCurrentConditions, cityForecast } = storeToRefs(weatherStore);
 		const { temperature } = storeToRefs(temperatureStore);
+		const loading = ref(false);
 
 		const isLocationSet = computed(() => {
 			return !helpers.isNumpty(props.location);
@@ -85,25 +89,30 @@ export default defineComponent({
 
 		async function addToFavorites() {
 			await favoritesStore.addToFavorites(cityInfo.value);
+			helpers.sendSuccessMessage(`Added ${cityInfo.value.LocalizedName} to favorites`);
 		}
 
 		async function removeFromFavorites() {
 			await favoritesStore.removeFromFavorites(cityInfo.value.Key);
+			helpers.sendSuccessMessage(`Removed ${cityInfo.value.LocalizedName} from favorites`);
 		}
 
 		onMounted(async () => {
-			// if (!isLocationSet.value) {
-			// 	await weatherStore.getCityByQuery("telaviv");
-			// 	await weatherStore.getCurrentConditions(cityInfo.value.Key);
-			// 	await weatherStore.getCityForecast(cityInfo.value.Key);
-			// } else {
-			// 	await weatherStore.getWeatherConditionsByGeoPosition(props.location);
-			// 	await weatherStore.getCurrentConditions(cityInfo.value.Key);
-			// 	await weatherStore.getCityForecast(cityInfo.value.Key);
-			// }
+			loading.value = true;
+			if (!isLocationSet.value) {
+				await weatherStore.getCityByQuery("telaviv");
+				await weatherStore.getCurrentConditions(cityInfo.value.Key);
+				await weatherStore.getCityForecast(cityInfo.value.Key);
+			} else {
+				await weatherStore.getWeatherConditionsByGeoPosition(props.location);
+				await weatherStore.getCurrentConditions(cityInfo.value.Key);
+				await weatherStore.getCityForecast(cityInfo.value.Key);
+			}
+			loading.value = false;
 		});
 
 		return {
+			loading,
 			isLocationSet,
 			cityInfo,
 			cityForecast,
