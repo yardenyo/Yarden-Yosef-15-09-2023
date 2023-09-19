@@ -14,7 +14,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://yardensweatherapp.netlify.app",
+    // origin: "https://yardensweatherapp.netlify.app",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
