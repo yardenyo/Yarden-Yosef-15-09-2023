@@ -1,8 +1,7 @@
 import Axios from "axios";
 import AxiosMiddleware from "@/helpers/axiosMiddleware.helpers";
 
-// window.localBaseURL = import.meta.env.VITE_API_HOST;
-window.localBaseURL = "http://localhost:5000/";
+window.localBaseURL = "https://yardensweatherapp.onrender.com";
 
 const config = {
 	withCredentials: true,
