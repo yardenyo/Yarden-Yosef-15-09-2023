@@ -72,6 +72,7 @@ export default defineComponent({
 		justify-content: space-between;
 		text-decoration: none;
 		cursor: pointer;
+		font-weight: 600;
 
 		.navbar-logo {
 			width: 50px;
@@ -132,6 +133,7 @@ export default defineComponent({
 			.navbar-link {
 				padding: 0.5rem;
 				border-radius: 0.5rem;
+				font-weight: 600;
 				cursor: pointer;
 				transition: all 0.2s ease-in-out;
 				text-decoration: none;
@@ -158,6 +160,7 @@ export default defineComponent({
 			border-radius: 0.5rem;
 			cursor: pointer;
 			transition: all 0.2s ease-in-out;
+			font-weight: 600;
 			text-decoration: none;
 		}
 	}

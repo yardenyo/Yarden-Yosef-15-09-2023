@@ -59,4 +59,8 @@ export default defineComponent({
 	transition: all 0.2s ease-in-out;
 	text-decoration: none;
 }
+
+.pi {
+	font-weight: 600;
+}
 </style>

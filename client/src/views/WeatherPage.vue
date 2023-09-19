@@ -90,4 +90,12 @@ export default defineComponent({
 		}
 	}
 }
+
+@media (max-width: $large-desktop) {
+	.weather-page {
+		.search-component {
+			width: 70%;
+		}
+	}
+}
 </style>

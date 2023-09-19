@@ -37,7 +37,6 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 
 			&:hover {
 				background: $primary;
-				color: $dark-900;
 			}
 		}
 
@@ -46,7 +45,6 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 
 			&:hover {
 				background: $primary;
-				color: $dark-900;
 			}
 		}
 	}
@@ -57,7 +55,6 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 
 		&:hover {
 			background: $primary;
-			color: $dark-900;
 		}
 	}
 
@@ -67,7 +64,6 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 
 		&:hover {
 			background: $primary;
-			color: $dark-900;
 		}
 	}
 
@@ -105,7 +101,7 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 	}
 
 	.footer-text {
-		color: $dark-900;
+		color: $white;
 	}
 
 	.text {
@@ -116,11 +112,11 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 		background: $primary;
 
 		.logo {
-			color: $dark-900;
+			color: $white;
 		}
 
 		.nav-link {
-			color: $dark-900;
+			color: $white;
 
 			&:hover {
 				background: $dark-aqua;
@@ -138,22 +134,21 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 
 	.theme-switcher {
 		background: $primary;
+		color: $white;
 
 		&:hover {
 			background: $dark-aqua;
-		}
-
-		.pi {
 			color: $dark-900;
 		}
 	}
 
 	.temperature-switcher {
 		background: $primary;
-		color: $dark-900;
+		color: $white;
 
 		&:hover {
 			background: $dark-aqua;
+			color: $dark-900;
 		}
 	}
 
@@ -162,7 +157,7 @@ $dark-glass-border: 1px solid rgba(0, 0, 0, 0.2);
 		color: $dark-900;
 
 		.bar {
-			background: $dark-900;
+			background: $white;
 		}
 	}
 

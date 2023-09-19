@@ -1,6 +1,6 @@
 <template>
 	<div :class="isMobile ? 'temperature-switcher-mobile' : 'temperature-switcher'" @click="toggleTemperature">
-		<span v-if="!isMobile">{{ temperatureIcon }}</span>
+		<span class="icon" v-if="!isMobile">{{ temperatureIcon }}</span>
 		<span v-else>Change Temperature</span>
 	</div>
 </template>
@@ -57,5 +57,9 @@ export default defineComponent({
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 	text-decoration: none;
+}
+
+.icon {
+	font-weight: 600;
 }
 </style>
