@@ -4,7 +4,7 @@
 			<div class="favorites-header">
 				<h1>Favorites</h1>
 			</div>
-			<div class="favorites-list">
+			<div v-if="favoritesExist" class="favorites-list">
 				<div class="favorites-list-item" v-for="(favorite, index) in favorites" :key="favorite.Key">
 					<div class="favorites-list-item-header">
 						<h2>{{ favorite.LocalizedName }}</h2>
@@ -33,6 +33,9 @@
 					</div>
 				</div>
 			</div>
+			<div v-else>
+				<h4>No Favorites Found</h4>
+			</div>
 		</div>
 	</div>
 	<LoadingComponent v-else />
@@ -57,7 +60,7 @@ export default defineComponent({
 		const favoritesStore = useFavoritesStore();
 		const temperatureStore = useTemperatureStore();
 		const themeStore = useThemeStore();
-		const { favorites, favoritesFullInfo } = storeToRefs(favoritesStore);
+		const { favorites, favoritesFullInfo, favoritesExist } = storeToRefs(favoritesStore);
 		const { temperature } = storeToRefs(temperatureStore);
 		const { theme } = storeToRefs(themeStore);
 		const loading = ref(false);
@@ -99,6 +102,7 @@ export default defineComponent({
 		return {
 			loading,
 			favorites,
+			favoritesExist,
 			favoritesFullInfo,
 			severityBasedTheme,
 			getTemperature,

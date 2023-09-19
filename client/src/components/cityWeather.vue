@@ -89,10 +89,12 @@ export default defineComponent({
 
 		async function addToFavorites() {
 			await favoritesStore.addToFavorites(cityInfo.value);
+			helpers.sendSuccessMessage(`Added ${cityInfo.value.LocalizedName} to favorites`);
 		}
 
 		async function removeFromFavorites() {
 			await favoritesStore.removeFromFavorites(cityInfo.value.Key);
+			helpers.sendSuccessMessage(`Removed ${cityInfo.value.LocalizedName} from favorites`);
 		}
 
 		onMounted(async () => {
