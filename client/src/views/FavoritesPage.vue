@@ -9,7 +9,6 @@
 					<div class="favorites-list-item-header">
 						<h2>{{ favorite.LocalizedName }}</h2>
 						<div class="favorites-list-item-header-buttons">
-							<Button type="button" icon="pi pi-search" :severity="severityBasedTheme" @click="navigateToWeatherPage(favorite)" />
 							<Button type="button" icon="pi pi-trash" severity="danger" @click="removeFromFavorites(favorite.Key)" />
 						</div>
 					</div>
@@ -67,10 +66,6 @@ export default defineComponent({
 		const { theme } = storeToRefs(themeStore);
 		const loading = ref(false);
 
-		const severityBasedTheme = computed(() => {
-			return theme.value === "light" ? "secondary" : "success";
-		});
-
 		const computedTemperature = computed(() => {
 			return temperature.value === "celsius" ? "Metric" : "Imperial";
 		});
@@ -83,18 +78,8 @@ export default defineComponent({
 			return favorites.value.some((favorite) => favorite.Key === key);
 		}
 
-		function addToFavorites(favorite) {
-			favoritesStore.addToFavorites(favorite);
-		}
-
 		function removeFromFavorites(key) {
 			favoritesStore.removeFromFavorites(key);
-		}
-
-		async function navigateToWeatherPage(favorite) {
-			loading.value = true;
-			await router.push({ name: "WeatherPage", params: { location: favorite } });
-			loading.value = false;
 		}
 
 		onMounted(async () => {
@@ -108,12 +93,9 @@ export default defineComponent({
 			favorites,
 			favoritesExist,
 			favoritesFullInfo,
-			severityBasedTheme,
 			getTemperature,
 			favoriteExists,
-			addToFavorites,
 			removeFromFavorites,
-			navigateToWeatherPage,
 		};
 	},
 });
